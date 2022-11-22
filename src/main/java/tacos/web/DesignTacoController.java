@@ -2,6 +2,7 @@ package tacos.web;
 
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
@@ -13,8 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import tacos.Ingredient;
 import tacos.Ingredient.Type;
 import tacos.Taco;
+import tacos.data.IngredientRepository;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,28 +27,19 @@ import java.util.stream.Collectors;
 @RequestMapping("/design")
 public class DesignTacoController {
 
+    private final IngredientRepository ingredientRepo;
+    @Autowired
+    public DesignTacoController(IngredientRepository ingredientRepo) {
+        this.ingredientRepo = ingredientRepo;
+    }
+
     private void attachViewIngredients(Model model, List<String> viewIngredientsIds) {
-        List<Ingredient> ingredients = Arrays.asList(
-                new Ingredient("FLTO", "Flour Tortilla", Ingredient.Type.WRAP),
-                new Ingredient("COTO", "Corn Tortilla", Ingredient.Type.WRAP),
-                new Ingredient("GRBF", "Ground Beef", Ingredient.Type.PROTEIN),
-                new Ingredient("CARN", "Carnitas", Ingredient.Type.PROTEIN),
-                new Ingredient("TMTO", "Diced Tomatoes", Ingredient.Type.VEGGIES),
-                new Ingredient("LETC", "Lettuce", Ingredient.Type.VEGGIES),
-                new Ingredient("CHED", "Cheddar", Ingredient.Type.CHEESE),
-                new Ingredient("JACK", "Monterrey Jack", Ingredient.Type.CHEESE),
-                new Ingredient("SLSA", "Salsa", Ingredient.Type.SAUCE),
-                new Ingredient("SRCR", "Sour Cream", Ingredient.Type.SAUCE)
-        );
+        List<Ingredient> ingredients = new ArrayList<>();
+        ingredientRepo.findAll().forEach(i -> ingredients.add(i));
 
         if (viewIngredientsIds != null && !viewIngredientsIds.isEmpty()) {
             viewIngredientsIds.remove(0);
             for (String viewIngredientId : viewIngredientsIds) {
-//                for (int i = 0; i < ingredients.size() && !ingredients.get(i).getId().equals(viewIngredientId); i++){};
-
-                log.info("searching " + viewIngredientId);
-                log.info("ingredients " + ingredients);
-
                 ingredients.stream()
                         .filter((viewIng) -> viewIng.getId().equals(viewIngredientId))
                         .forEach((ing) -> {
@@ -53,9 +47,6 @@ public class DesignTacoController {
                             ing.setChecked(true);
                         });
             }
-
-            log.info(""+ingredients);
-
         }
 
         Type[] types = Ingredient.Type.values();
@@ -82,10 +73,6 @@ public class DesignTacoController {
 
     @PostMapping
     public String processDesign(@Valid @ModelAttribute("design") Taco design, Errors errors, Model model) {
-        log.info("Submited design " + design);
-        log.info("Errors " + errors);
-        log.info("Model " + model);
-
         if (errors.hasErrors()) {
             log.error("Design Form has errors");
             Taco taco = (Taco) model.getAttribute("design");

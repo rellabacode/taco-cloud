@@ -1,19 +1,26 @@
 package tacos;
 
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.validator.constraints.CreditCardNumber;
 
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
-import java.sql.Date;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 
 @Data
 public class Order {
     private Long id;
-    private Date createdAt;
-    
+    private Date placedAt;
+
+    private List<Taco> tacos = new LinkedList<Taco>();
+
     @NotBlank(message = "Name is required")
     private String name;
 
@@ -37,4 +44,16 @@ public class Order {
 
     @Digits(integer = 3, fraction = 0, message = "Invalid CCV")
     private String ccCVV;
+
+    public boolean addDesign(Taco design) {
+        return this.tacos.add(design);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

@@ -10,12 +10,11 @@ import tacos.Ingredient;
 import tacos.Ingredient.Type;
 import tacos.Order;
 import tacos.Taco;
-import tacos.data.IngredientRepository;
-import tacos.data.TacoRepository;
+import tacos.data.jpa.IngredientRepository;
+import tacos.data.jpa.TacoRepository;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,7 +32,7 @@ public class DesignTacoController {
         return new Order();
     }
 
-    @ModelAttribute(name = "taco")
+    @ModelAttribute(name = "design")
     public Taco taco() {
         return new Taco();
     }
@@ -84,6 +83,7 @@ public class DesignTacoController {
 
     @PostMapping
     public String processDesign(@Valid Taco design, Errors errors, Model model) {
+        log.info("Submitted taco design "+ design);
         if (errors.hasErrors()) {
             log.error("Design Form has errors");
             Taco taco = (Taco) model.getAttribute("design");

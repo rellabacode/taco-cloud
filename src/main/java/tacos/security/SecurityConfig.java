@@ -52,11 +52,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .password("{noop}bullseye")
 //                .authorities("ROLE_USER");
 
+//        auth
+//                .jdbcAuthentication()
+//                .dataSource(dataSource)
+//                .usersByUsernameQuery(DEF_USERS_BY_USERNAME_QUERY)
+//                .authoritiesByUsernameQuery(DEF_AUTHORITIES_BY_USERNAME_QUERY)
+//                .passwordEncoder(new BCryptPasswordEncoder());
         auth
-                .jdbcAuthentication()
-                .dataSource(dataSource)
-                .usersByUsernameQuery(DEF_USERS_BY_USERNAME_QUERY)
-                .authoritiesByUsernameQuery(DEF_AUTHORITIES_BY_USERNAME_QUERY)
-                .passwordEncoder(new BCryptPasswordEncoder());
+                .ldapAuthentication()
+                .userSearchFilter("(uid={0})")
+                .contextSource()
+                .url("ldap://localhost:8389/dc=breadcrumbdata,dc=com");
+
     }
 }

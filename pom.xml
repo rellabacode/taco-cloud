@@ -69,6 +69,30 @@
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
+        <!--LDAP-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-ldap</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-ldap</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.ldap</groupId>
+            <artifactId>spring-ldap-core</artifactId>
+        </dependency>
+
+        <!--Embedded LDAP for test-->
+        <dependency>
+            <groupId>com.unboundid</groupId>
+            <artifactId>unboundid-ldapsdk</artifactId>
+        </dependency>
+
+
+
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-test</artifactId>
@@ -107,6 +131,20 @@
             <artifactId>spring-jdbc</artifactId>
             <version>5.3.22</version>
         </dependency>
+
+        <!--        <dependency>-->
+        <!--            <groupId>org.apache.directory.server</groupId>-->
+        <!--            <artifactId>apacheds-all</artifactId>-->
+        <!--            <version>2.0.0.AM26</version>-->
+        <!--        </dependency>-->
+
+        <dependency>
+            <groupId>org.apache.directory.server</groupId>
+            <artifactId>apacheds-test-framework</artifactId>
+            <version>2.0.0.AM26</version>
+        </dependency>
+
+
     </dependencies>
 
     <build>

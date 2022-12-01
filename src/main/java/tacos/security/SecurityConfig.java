@@ -61,13 +61,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .formLogin()
+                .loginPage("/login")
+                .loginProcessingUrl("/login")
+                .usernameParameter("user")
+                .passwordParameter("pwd")
+                .defaultSuccessUrl("/design", true)
                 .and()
                 .authorizeRequests()
                 .antMatchers("/design", "/orders/**")
-                .access("hasRole('ROLE_USER')&& " +
-                        "T(java.util.Calendar).getInstance().get("+
-                        "T(java.util.Calendar).DAY_OF_WEEK) == " +
-                        "T(java.util.Calendar).TUESDAY")
+                .access("hasRole('ROLE_USER')")
                 .antMatchers("/", "/**")
                 .access("permitAll");
     }

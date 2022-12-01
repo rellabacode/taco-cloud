@@ -8,6 +8,10 @@
 <body>
 <h1>Design your taco!</h1>
 <img th:src="@{/images/TacoCloud.png}"/>
+<form th:action="@{/logout}" method="post">
+    <input type="submit" value="Logout" />
+</form>
+
 <form method="POST" th:object="${design}">
     <div class="grid">
         <input name="ingredients" type="text" value="" style="display:none"/>

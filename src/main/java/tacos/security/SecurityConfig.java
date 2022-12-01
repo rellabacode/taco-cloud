@@ -1,12 +1,15 @@
 package tacos.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
 
 import javax.sql.DataSource;
@@ -16,6 +19,9 @@ import javax.sql.DataSource;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     DataSource dataSource;
+
+    @Autowired
+    private UserDetailsService userDetailsService;
 
     public static final String DEF_USERS_BY_USERNAME_QUERY =
             "select username,password,enabled " +
@@ -36,7 +42,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         web
                 .ignoring()
-                .antMatchers("/h2-console/**");
+                .antMatchers("/h2-console/**")
+                .and()
+                .ignoring()
+                .antMatchers("/register/**");
+    }
+
+
+    @Bean
+    public PasswordEncoder encoder() {
+        return new StandardPasswordEncoder("53cr3t");
     }
 
 
@@ -58,11 +73,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .usersByUsernameQuery(DEF_USERS_BY_USERNAME_QUERY)
 //                .authoritiesByUsernameQuery(DEF_AUTHORITIES_BY_USERNAME_QUERY)
 //                .passwordEncoder(new BCryptPasswordEncoder());
+
+//        auth
+//                .ldapAuthentication()
+//                .userSearchFilter("(uid={0})")
+//                .contextSource()
+//                .url("ldap://localhost:8389/dc=breadcrumbdata,dc=com");
+
         auth
-                .ldapAuthentication()
-                .userSearchFilter("(uid={0})")
-                .contextSource()
-                .url("ldap://localhost:8389/dc=breadcrumbdata,dc=com");
+                .userDetailsService(userDetailsService);
+//                .passwordEncoder(encoder());
 
     }
 }

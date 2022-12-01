@@ -1,7 +1,7 @@
 create table users(username varchar(255) not null primary key,password varchar(255) not null,enabled  boolean not null);
 
 --INSERT INTO USERS(USERNAME, PASSWORD, ENABLED) VALUES ('buzz', '{noop}infinity', true);
-INSERT INTO USERS(USERNAME, PASSWORD, ENABLED) VALUES ('buzz', '$2a$10$QQJLwgV2JdaECNmSvNwlhuL57xmHSMT/ydOVSNjDfgE1g7Eb5dd9.', true);
+INSERT INTO USERS(USERNAME, PASSWORD, ENABLED) VALUES ('buzz', '$2a$10$XohWVS.IQXf0skjeY/IEwe9Y3fGxsGUTDzMUyr9kPTMa3A6NEKvWK', true);
 
 create table authorities(username  varchar(50) not null,authority varchar(50) not null,constraint fk_authorities_users foreign key (username) references users (username));
 

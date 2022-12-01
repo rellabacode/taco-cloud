@@ -64,7 +64,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/design", "/orders/**")
-                .access("hasRole('ROLE_USER')")
+                .access("hasRole('ROLE_USER')&& " +
+                        "T(java.util.Calendar).getInstance().get("+
+                        "T(java.util.Calendar).DAY_OF_WEEK) == " +
+                        "T(java.util.Calendar).TUESDAY")
                 .antMatchers("/", "/**")
                 .access("permitAll");
     }

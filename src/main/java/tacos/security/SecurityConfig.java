@@ -9,7 +9,6 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
 
@@ -44,37 +43,33 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new StandardPasswordEncoder("53cr3t");
     }
 
-//    @Override
-//    public void configure(WebSecurity web) throws Exception {
-//        web
-//                .ignoring()
-//                .antMatchers("/h2-console/**")
+    @Override //global security
+    public void configure(WebSecurity web) throws Exception {
+        web
+                .ignoring()
+                .antMatchers("/h2-console/**");
 //                .and()
 //                .ignoring()
 //                .antMatchers("/register/**");
-//    }
+    }
 
-
-
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
+    @Override //resource level
+    public void configure(HttpSecurity http) throws Exception {
         http
+                .authorizeRequests()
+                    .antMatchers("/design", "/orders/**")
+                        .access("hasRole('ROLE_USER')")
+                    .antMatchers("/", "/**")
+                        .permitAll()
+                .and()
                 .formLogin()
-                .loginPage("/login")
-                .loginProcessingUrl("/login")
-                .usernameParameter("user")
-                .passwordParameter("pwd")
+                    .loginPage("/login")
+                    .loginProcessingUrl("/login")
+                    .usernameParameter("user")
+                    .passwordParameter("pwd")
                 .defaultSuccessUrl("/design", true)
                 .and()
-                .authorizeRequests()
-                .antMatchers("/design", "/orders/**")
-                .access("hasRole('ROLE_USER')")
-                .antMatchers("/", "/**")
-                .access("permitAll")
-                .and()
-                .logout()
-                .logoutSuccessUrl("/");
+                    .logout().logoutSuccessUrl("/");
     }
 
     @Autowired
@@ -89,12 +84,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .password("{noop}bullseye")
 //                .authorities("ROLE_USER");
 
-        auth
-                .jdbcAuthentication()
-                .dataSource(dataSource)
-                .usersByUsernameQuery(DEF_USERS_BY_USERNAME_QUERY)
-                .authoritiesByUsernameQuery(DEF_AUTHORITIES_BY_USERNAME_QUERY)
-                .passwordEncoder(new BCryptPasswordEncoder());
+//        auth
+//                .jdbcAuthentication()
+//                .dataSource(dataSource)
+//                .usersByUsernameQuery(DEF_USERS_BY_USERNAME_QUERY)
+//                .authoritiesByUsernameQuery(DEF_AUTHORITIES_BY_USERNAME_QUERY)
+//                .passwordEncoder(new BCryptPasswordEncoder());
 
 //        auth
 //                .ldapAuthentication()
@@ -102,8 +97,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .contextSource()
 //                .url("ldap://localhost:8389/dc=breadcrumbdata,dc=com");
 
-//        auth
-//                .userDetailsService(userDetailsService);
+        auth
+                .userDetailsService(userDetailsService);
 //                .passwordEncoder(encoder());
 
     }

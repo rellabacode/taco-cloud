@@ -12,7 +12,7 @@
     <input type="submit" value="Logout" />
 </form>
 
-<form method="POST" th:object="${design}">
+<form method="POST" th:object="${design}" th:action="@{/design}">
     <div class="grid">
         <input name="ingredients" type="text" value="" style="display:none"/>
         <small class="form-text text-danger" th:if="${#fields.hasErrors('ingredients')}" th:errors="*{ingredients}"></small>

@@ -15,6 +15,10 @@
 
 <p>New here? Click <a th:href="@{/register}">here</a> to register.</p>
 
+<div th:if="${not #strings.isEmpty(username)}">
+    <p>User <span th:utext="'&lt;b&gt;' + ${username} + '&lt;/b&gt;'"/> Registered successfully! Please, log into the app</p>
+</div>
+
 <!-- tag::thAction[] -->
 <form method="POST" th:action="@{/login}" id="loginForm">
     <!-- end::thAction[] -->

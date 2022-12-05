@@ -2,6 +2,7 @@ package tacos.web;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -68,9 +69,11 @@ public class DesignTacoController {
     }
 
     @GetMapping
-    public String showDesignForm(Model model) {
+    public String showDesignForm(Model model, CsrfToken token) {
         attachViewIngredients(model, null);
         log.info("DesignTacoController /design " + model.getAttribute("design") + model.getAttribute("order"));
+        log.info("DesignTacoController /design token " + token.getHeaderName() + " "+token.getParameterName()+ " "+ token.getToken());
+
         return "design";
     }
 
@@ -82,8 +85,10 @@ public class DesignTacoController {
     }
 
     @PostMapping
-    public String processDesign(@Valid Taco design, Errors errors, Model model) {
+    public String processDesign(@Valid Taco design, Errors errors, Model model, CsrfToken token) {
         log.info("Submitted taco design "+ design);
+        log.info("Submitted taco token "+ token.getToken());
+
         if (errors.hasErrors()) {
             log.error("Design Form has errors");
             Taco taco = (Taco) model.getAttribute("design");

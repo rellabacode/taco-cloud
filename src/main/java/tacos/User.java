@@ -1,5 +1,6 @@
 package tacos;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+@Slf4j
 @Entity
 @Table(name = "usuarios")
 public class User implements UserDetails {
@@ -18,16 +20,22 @@ public class User implements UserDetails {
     private Long id;
 
     private String userName;
+
     private String userPassword;
     private String fullName;
+
     private String street;
+
     private String city;
+
     private String state;
+
     private String zip;
-    private String phoneNumber;
+
+    private String mobile;
 
     public User(String username, String password, String fullname, String street,
-                String city, String state, String zip, String phoneNumber) {
+                String city, String state, String zip, String mobile) {
         this.userName = username;
         this.userPassword = password;
         this.fullName = fullname;
@@ -35,7 +43,7 @@ public class User implements UserDetails {
         this.city = city;
         this.state = state;
         this.zip = zip;
-        this.phoneNumber = phoneNumber;
+        this.mobile = mobile;
     }
 
     public User() {
@@ -74,8 +82,8 @@ public class User implements UserDetails {
         this.zip = zip;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
     }
 
     public void setId(Long id) {
@@ -90,7 +98,7 @@ public class User implements UserDetails {
         return userPassword;
     }
 
-    public String getFullname() {
+    public String getFullName() {
         return fullName;
     }
 
@@ -110,8 +118,8 @@ public class User implements UserDetails {
         return zip;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public String getMobile() {
+        return mobile;
     }
 
     @Override
@@ -138,8 +146,23 @@ public class User implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> roles = new ArrayList<>();
         roles.add(new SimpleGrantedAuthority("ROLE_USER"));
+
+        log.info("User roles " + roles);
         return roles;
     }
 
-
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", userName='" + userName + '\'' +
+                ", userPassword='" + userPassword + '\'' +
+                ", fullName='" + fullName + '\'' +
+                ", street='" + street + '\'' +
+                ", city='" + city + '\'' +
+                ", state='" + state + '\'' +
+                ", zip='" + zip + '\'' +
+                ", mobile='" + mobile + '\'' +
+                '}';
+    }
 }

@@ -8,9 +8,9 @@ import java.util.Date;
 import java.util.List;
 
 public interface OrderRepository extends CrudRepository<Order, Long> {
-    List<Order> findByZip(String deliveryZip);
-    List<Order> readOrdersByZipAndPlacedAtBetween(
-            String zip, Date startDate, Date endDate);
-    @Query(value = "Select o from Order o where o.city='Seattle'")
-    List<Order> readOrdersDeliveredInSeattle();
+//    List<Order> findByZip(String deliveryZip);
+//    List<Order> readOrdersByZipAndPlacedAtBetween(
+//            String zip, Date startDate, Date endDate);
+//    @Query(value = "Select o from Order o where o.user.city='Seattle'")
+//    List<Order> readOrdersDeliveredInSeattle();
 }

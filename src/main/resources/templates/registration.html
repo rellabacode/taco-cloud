@@ -10,6 +10,8 @@
     <h1>Register</h1>
     <img th:src="@{/images/TacoCloud.png}" alt="">
 
+    <div th:insert="fragments/header.html"></div>
+
     <!--<span th:text="${formErrors.size()}"></span>-->
 
     <div th:hidden="${#bools.isTrue(formErrors.isEmpty())}">

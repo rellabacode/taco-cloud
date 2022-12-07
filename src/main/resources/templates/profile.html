@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Taco Cloud</title>
+    <link rel="stylesheet" th:href="@{/styles.css}"/>
+</head>
+<body>
+<div th:insert="fragments/header.html"></div>
+<h1>This is your Taco App profile!</h1>
+<img th:src="@{/images/TacoCloud.png}"/>
+<form th:action="@{/logout}" method="post">
+    <input type="submit" value="Logout"/>
+</form>
+<ul>
+    <li th:each="property:${userProperties}">
+        <p>
+            <span th:text="${property.key}+':'"></span>
+            <span th:text="${property.value}"></span>
+        </p>
+    </li>
+</ul>
+</body>
+</html>

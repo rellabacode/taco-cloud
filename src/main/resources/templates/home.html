@@ -7,5 +7,14 @@
 <body>
     <h1>Welcome to...</h1>
     <img th:src="@{/images/TacoCloud.png}" alt="" />
+    <div th:insert="fragments/header.html"></div>
+    <div th:if="${@environment.getProperty('custom.debug.mode') eq 'true'}">
+        <p>App running with these parameters:</p>
+        <ul>
+            <li>LiveReload Server Enabled: <span th:text="${@environment.getProperty('spring.devtools.livereload.port')}"></span></li>
+            <li>Port: <span th:text="${@environment.getProperty('server.port')}"></span></li>
+            <li>Logging File Path: <span th:text="${@environment.getProperty('logging.file.path')}"></span></li>
+        </ul>
+    </div>
 </body>
 </html>

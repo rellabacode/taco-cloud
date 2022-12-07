@@ -9,6 +9,8 @@
 <h1>Login</h1>
 <img th:src="@{/images/TacoCloud.png}" alt=""/>
 
+<div th:insert="fragments/header.html"></div>
+
 <div th:if="${error}">
     Unable to login. Check your username and password.
 </div>

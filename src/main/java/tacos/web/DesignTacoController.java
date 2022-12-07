@@ -2,6 +2,7 @@ package tacos.web;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,6 +12,7 @@ import tacos.Ingredient;
 import tacos.Ingredient.Type;
 import tacos.Order;
 import tacos.Taco;
+import tacos.User;
 import tacos.data.jpa.IngredientRepository;
 import tacos.data.jpa.TacoRepository;
 
@@ -29,8 +31,13 @@ public class DesignTacoController {
     private final TacoRepository tacoRepository;
 
     @ModelAttribute(name = "order")
-    public Order order() {
-        return new Order();
+    public Order order(@AuthenticationPrincipal User user) {
+        Order order = new Order();
+        order.setCcCVV("123");
+        order.setCcExpiration("12/23");
+        order.setCcNumber("4922428717424949");
+        order.setUser(user);
+        return order;
     }
 
     @ModelAttribute(name = "design")
@@ -85,12 +92,13 @@ public class DesignTacoController {
     }
 
     @PostMapping
-    public String processDesign(@Valid Taco design, Errors errors, Model model, CsrfToken token) {
+    public String processDesign(@Valid @ModelAttribute(name = "design") Taco design, Errors errors, Model model, CsrfToken token) {
         log.info("Submitted taco design "+ design);
         log.info("Submitted taco token "+ token.getToken());
 
         if (errors.hasErrors()) {
-            log.error("Design Form has errors");
+            log.error("Design Form has errors " + errors);
+            log.error("Design Form has errors TACO " + design);
             Taco taco = (Taco) model.getAttribute("design");
             attachViewIngredients(model, taco.getIngredients());
             return "design";

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import tacos.ComparatorField;
 import tacos.User;
 
@@ -21,51 +22,53 @@ import java.util.stream.Stream;
 public class UserController {
 
     @GetMapping("/profile")
-    public String showProfile(@AuthenticationPrincipal User user, Model model) throws IllegalAccessException {
-        Field[] userFields = user.getClass().getDeclaredFields();
-        class KeyValProp {
-            private String key;
-            private Object value;
+    public String showProfile(@AuthenticationPrincipal User user, Model model, RedirectAttributes ra) throws IllegalAccessException {
 
-            public KeyValProp(String key, Object value) {
-                this.key = key;
-                this.value = value;
+        if (user != null) {
+            Field[] userFields = user.getClass().getDeclaredFields();
+            class KeyValProp {
+                private String key;
+                private Object value;
+
+                public KeyValProp(String key, Object value) {
+                    this.key = key;
+                    this.value = value;
+                }
+
+                public String getKey() {
+                    return key;
+                }
+
+                public Object getValue() {
+                    return value;
+                }
             }
 
-            public String getKey() {
-                return key;
+            for (Field f :
+                    userFields) {
+                f.setAccessible(true);
             }
 
-            public Object getValue() {
-                return value;
-            }
-        }
+            Predicate<Field> allowedField = f -> (!f.getName().equals("id") &&
+                    !f.getName().equals("userPassword") &&
+                    !f.getName().equals("log") &&
+                    !f.getName().equals("serialVersionUID"));
 
-        for (Field f :
-                userFields) {
-            f.setAccessible(true);
-        }
-
-        Predicate<Field> allowedField = f -> (!f.getName().equals("id") &&
-                !f.getName().equals("userPassword") &&
-                !f.getName().equals("log") &&
-                !f.getName().equals("serialVersionUID"));
-
-        Stream<Field> stream = Arrays
-                .stream(userFields)
-                .filter(allowedField)
-                .sorted(new ComparatorField());
+            Stream<Field> stream = Arrays
+                    .stream(userFields)
+                    .filter(allowedField)
+                    .sorted(new ComparatorField());
 //                .collect(Collectors.toList());
 //                .toArray(Field[]::new);
 
-        KeyValProp[] userProperties = stream.map(prop -> {
-            try {
-                String name = prop.getName();
-                return new KeyValProp(name.substring(0, 1).toUpperCase() + name.toLowerCase().substring(1), prop.get(user));
-            } catch (IllegalAccessException e) {
-                throw new RuntimeException(e);
-            }
-        }).toArray(KeyValProp[]::new);
+            KeyValProp[] userProperties = stream.map(prop -> {
+                try {
+                    String name = prop.getName();
+                    return new KeyValProp(name.substring(0, 1).toUpperCase() + name.toLowerCase().substring(1), prop.get(user));
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException(e);
+                }
+            }).toArray(KeyValProp[]::new);
 
 //        for (Field f :
 //                userFields) {
@@ -74,8 +77,13 @@ public class UserController {
 //            fields.put(f.getName(), value);
 //        }
 
-        model.addAttribute("userProperties", userProperties);
-        return "profile";
+            model.addAttribute("userProperties", userProperties);
+            return "profile";
+        }
+
+        ra.addFlashAttribute("nologin", true);
+
+        return "redirect:/login";
     }
 
 }

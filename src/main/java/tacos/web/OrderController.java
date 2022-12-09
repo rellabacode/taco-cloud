@@ -1,9 +1,7 @@
 package tacos.web;
 
-import com.google.common.base.Joiner;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -26,19 +24,20 @@ import java.util.List;
 @Controller
 @RequestMapping("/order")
 @SessionAttributes("order")
-@ConfigurationProperties(prefix = "taco.orders")
 public class OrderController {
 
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
 
-    private int pageSize = 10;
-
+    private final OrderProps props;
 
     @Autowired
-    public OrderController(OrderRepository orderRepository, UserRepository userRepository) {
+    public OrderController(OrderRepository orderRepository,
+                           UserRepository userRepository,
+                           OrderProps orderProps) {
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
+        this.props = orderProps;
     }
 
     @GetMapping("/current")
@@ -54,7 +53,7 @@ public class OrderController {
 
         int nP = numPage > 0 ? numPage-1 : numPage;
 
-        Pageable pageable = PageRequest.of(nP, pageSize);
+        Pageable pageable = PageRequest.of(nP, props.getPageSize());
         Page<Order> orders = orderRepository.findByUserOrderByPlacedAtDesc(user, pageable);
 //        log.info("/list orders " + Joiner.on("").join(orders));
 
@@ -64,13 +63,12 @@ public class OrderController {
             pageList.add(i);
         }
 
-
         model.addAttribute("orders", orderList);
         model.addAttribute("pages", pageList);
         model.addAttribute("numPage", nP);
         model.addAttribute("numOrders", orders.getTotalElements());
         model.addAttribute("totalPages", orders.getTotalPages());
-        model.addAttribute("pageSize", pageSize);
+        model.addAttribute("pageSize", props.getPageSize());
         return "orderList";
     }
 
@@ -90,13 +88,5 @@ public class OrderController {
 
         log.info("Order after session deleted: " + order);
         return "redirect:/";
-    }
-
-    public int getPageSize() {
-        return pageSize;
-    }
-
-    public void setPageSize(int pageSize) {
-        this.pageSize = pageSize;
     }
 }

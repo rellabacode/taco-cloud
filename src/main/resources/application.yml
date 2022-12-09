@@ -1,0 +1,79 @@
+custom:
+    debug:
+      mode: true
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE
+#      springframework:
+#        security.*: TRACE
+    tacos: DEBUG
+#  file:
+#    name: TacoCloud.log
+#    path: "C:\\Dev\\spring\\taco-cloud\\"
+
+server:
+  port: 8080
+  #HTTPS CONFIG
+  #ssl:
+    #key-store: classpath:mykeys.jks
+    #key-store-password: codigocaballer
+    #key-password: codigocaballer
+spring:
+  application:
+    name: Taco Cloud
+  # h2 db
+  datasource:
+    #driver-class-name: org.h2.Driver
+    #password: sa
+    #username: sa
+    #url: jdbc:h2:file:C:/Dev/spring/taco-cloud/temp/db
+    url: jdbc:h2:mem:de31d36d-c385-42ba-a887-6a78caaa8555
+  devtools:
+    livereload:
+      port: 35729
+  jpa:
+    #database-platform: org.hibernate.dialect.H2Dialect
+    hibernate: #Spring Boot >=v2.5.0
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        hbm2ddl:
+          import_files: security.sql,import.sql
+    show-sql: true
+# ldap:
+#   embedded:
+#     ldif: classpath:users.ldif
+#     port: 8389
+#     base-dn: dc=breadcrumbdata,dc=com
+  #Spring Boot >=v2.5.0
+  sql:
+    init.mode: always
+  thymeleaf:
+    cache: false
+    #prefix: file:src/main/resources/templates/
+    prefix: classpath:/templates/
+    #sql:
+    #  init:
+    #    data-locations: classpath:data.sql
+
+taco:
+  orders:
+    pageSize: 5
+
+---
+custom:
+  debug:
+    mode: false
+spring:
+  profiles: prod
+---
+spring:
+  profiles:
+      active: "dev","qa"

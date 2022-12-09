@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Taco Cloud</title>
+    <link rel="stylesheet" th:href="@{/styles.css}"/>
+</head>
+<body>
+<div th:insert="fragments/header.html"></div>
+<h1>Your taco orders!</h1>
+<img th:src="@{/images/TacoCloud.png}"/>
+<form th:action="@{/logout}" method="post">
+    <input type="submit" value="Logout" />
+</form>
+<p>You have ordered: <span th:text="${numOrders}"></span> orders</p>
+    <div th:each="order: ${orders}">
+        <p>Order#<span th:text="${numPage*pageSize + orders.indexOf(order) + 1}">ID</span></p>
+        <ul>
+            <li>Placed At: <span th:text="${order.placedAt}">ORDER PLACED AT</span></li>
+            <li>User: <span th:text="${order.user.getFullName()}">USER FULLNAME</span></li>
+        </ul>
+    </div>
+
+    <div th:if="${totalPages gt 1}">
+        <a href="http://localhost:8080/order/list">1</a>
+        <a th:style="${pages.indexOf(page) eq numPage ? 'font-size:bold' : ''}+' margin-left: 10px;'" th:each="page: ${pages}" th:href="'http://localhost:8080/order/list?numPage=' + ${page}" th:text="${page}"></a>
+    </div>
+</body>
+</html>

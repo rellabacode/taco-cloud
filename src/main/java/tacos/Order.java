@@ -115,10 +115,10 @@ public class Order implements Serializable {
                 "id=" + id +
                 ", placedAt=" + placedAt +
                 ", tacos=[" + Joiner.on("").join(tacos) +
-                "], " +
                 ", ccNumber='" + ccNumber + '\'' +
                 ", ccExpiration='" + ccExpiration + '\'' +
                 ", ccCVV='" + ccCVV + '\'' +
+                ", user=" + user +
                 '}';
     }
 }

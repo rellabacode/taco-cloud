@@ -1,5 +1,7 @@
 package tacos.data.jpa;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import tacos.Order;
 import tacos.User;
 
@@ -14,9 +16,10 @@ public class JpaOrderRepository implements OrderRepository {
     }
 
     @Override
-    public List<Order> findByUserOrderByPlacedAtDesc(User user) {
-        return this.findByUserOrderByPlacedAtDesc(user);
+    public Page<Order> findByUserOrderByPlacedAtDesc(User user, Pageable pageable) {
+        return this.findByUserOrderByPlacedAtDesc(user, pageable);
     }
+
 
     @Override
     public <S extends Order> S save(S entity) {

@@ -5,9 +5,9 @@
     <title>Taco Cloud</title>
 </head>
 <body>
+    <div th:insert="fragments/header.html"></div>
     <h1>Welcome to...</h1>
     <img th:src="@{/images/TacoCloud.png}" alt="" />
-    <div th:insert="fragments/header.html"></div>
     <div th:if="${@environment.getProperty('custom.debug.mode') eq 'true'}">
         <p>App running with these parameters:</p>
         <ul>

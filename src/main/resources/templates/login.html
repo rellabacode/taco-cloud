@@ -4,12 +4,19 @@
 <head>
     <meta charset="UTF-8">
     <title>Taco Cloud</title>
+    <link rel="stylesheet" th:href="@{/styles.css}"/>
 </head>
 <body>
+<div th:insert="fragments/header.html"></div>
 <h1>Login</h1>
 <img th:src="@{/images/TacoCloud.png}" alt=""/>
 
-<div th:insert="fragments/header.html"></div>
+
+
+<div th:if="${nologin}" class="text-danger">
+    You need to log in to use Taco Cloud
+</div>
+
 
 <div th:if="${error}">
     Unable to login. Check your username and password.

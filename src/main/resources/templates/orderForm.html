@@ -7,11 +7,12 @@
     <link rel="stylesheet" th:href="@{/styles.css}"/>
 </head>
 <body>
+    <div th:insert="fragments/header.html"></div>
     <form th:action="@{/logout}" method="post">
         <input type="submit" value="Logout" />
     </form>
 
-    <div th:insert="fragments/header.html"></div>
+
 
     <form th:action="@{/orders}" th:object="${order}" method="post">
         <h1>Order your taco creations</h1>

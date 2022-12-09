@@ -23,7 +23,7 @@
 
     <div th:if="${totalPages gt 1}">
         <a href="http://localhost:8080/order/list">1</a>
-        <a th:style="${pages.indexOf(page) eq numPage ? 'font-size:bold' : ''}+' margin-left: 10px;'" th:each="page: ${pages}" th:href="'http://localhost:8080/order/list?numPage=' + ${page}" th:text="${page}"></a>
+        <a th:style="${pages.indexOf(page) eq numPage ? 'font-size:bold' : ''}+' ;margin-left: 10px;'" th:each="page: ${pages}" th:href="'http://localhost:8080/order/list?numPage=' + ${page}" th:text="${page}"></a>
     </div>
 </body>
 </html>
